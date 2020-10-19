@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "heroku-prebuild": "cd public && npm install && npm run build",
+    "heroku-prebuild": "npm install && cd public && npm install && npm run build",
     "start": "node ./bin/www"
   },
   "dependencies": {
