@@ -42,7 +42,7 @@ class MatchList extends React.Component {
     }
 
     getMatchHistory(username, callback) {
-        fetch("http://localhost:9000/api/user/" + username + "/matchhistory")
+        fetch("/api/user/" + username + "/matchhistory")
             .then(res => res.json())
             .then(res => callback(res));
     }
