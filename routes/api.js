@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const LeagueJS = require('LeagueJS');
+const LeagueJS = require('leaguejs');
 
 const API_KEY = process.env.RIOT_API_KEY;
 const leagueJs = new LeagueJS(API_KEY);
