@@ -34,8 +34,15 @@ router.get('/user/:username/matchlist', function(req, res, next) {
  */
 router.get('/user/:username/matchhistory', function(req, res, next) {
     const username = req.params.username;
+
+    if (!username) {
+        throw new Error('Username is a required field');
+    }
+
     getMatchListByUsername(username, (matchList) => {
-        const fullMatches = matchList.matches;
+        const fullMatches = matchList.matches.matches;
+        const accountId = matchList.accountId;
+
         let matchHistory = [];
 
         // For now, just looking at first five matches in detail
@@ -49,7 +56,7 @@ router.get('/user/:username/matchhistory', function(req, res, next) {
 
                 // last iteration
                 if ( i >= fullMatches.length - 1 || i >= 4) {
-                    res.send(matchHistory);
+                    res.send({"accountId" : accountId, "matches" : matchHistory});
                 }
             });
         }
@@ -108,7 +115,7 @@ function getMatchListByUsername(username, callback) {
         if (!accountId) { console.error("No accountId found"); callback(null); }
 
         getMatchList(data.accountId, (matchList) => {
-            callback(matchList);
+            callback({"accountId" : data.accountId, "matches" : matchList});
         });
     });
 }

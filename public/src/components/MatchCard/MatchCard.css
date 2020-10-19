@@ -1,0 +1,24 @@
+* {
+  margin: 4px;
+}
+
+.match-card {
+  outline: 1px solid black;
+  padding: 8px;
+  width: auto;
+}
+
+.summoner-name {
+  font-style: bold;
+}
+
+.kda {
+  font-size: 10px;
+}
+
+.stats-container,
+.kda-container {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+}
