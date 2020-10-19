@@ -5,20 +5,39 @@
 .match-card {
   outline: 1px solid black;
   padding: 8px;
-  width: auto;
+  display: flex;
+  flex-direction: row;
+  max-width: 100%;
+  width: 500px;
 }
 
 .summoner-name {
-  font-style: bold;
+  font-weight: bold;
 }
 
-.kda {
+.victory-status {
+  font-weight: bold;
+  color: #4b678b;
+}
+
+.game-duration {
   font-size: 10px;
 }
 
-.stats-container,
-.kda-container {
+.items-container,
+.stats-container {
   align-items: center;
   display: flex;
   flex-direction: row;
+}
+
+.level-container,
+.spells-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.item {
+  font-size: 8px;
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import MatchCard from '../MatchCard/MatchCard';
+import './MatchList.css';
 
 class MatchList extends React.Component {
 
@@ -27,6 +28,7 @@ class MatchList extends React.Component {
             
                 matchData.participantId = id;
                 matchData.summonerName = participantData.player.summonerName;
+                matchData.gameDuration = match.gameDuration;
 
                 matchData.stats = match.participants[id - 1];
 
@@ -47,7 +49,7 @@ class MatchList extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="match-list">
                 <form onSubmit={this.handleSubmit}>
                     <label>
                         Summoner Name:

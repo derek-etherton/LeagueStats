@@ -51,7 +51,6 @@ router.get('/user/:username/matchhistory', function(req, res, next) {
             const match = fullMatches[i];
 
             getGameById(match.gameId, (gameData) => {
-                console.log(i);
                 matchHistory.push(gameData);
 
                 // last iteration
