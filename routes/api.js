@@ -10,16 +10,11 @@ router.get('/', function(req, res, next) {
     res.send('healthy');
 });
 
-/**
- * Retrieves the specified user from the League API, returning JSON containing
- * id
- * accountId
- * puuid
- * name
- * profileIconId
- * revisionDate
- * summonerLevel
- */
+
+/***************************************
+ *  ENDPOINTS
+ **************************************/
+
 router.get('/user/:username', function(req, res, next) {
     const username = req.params.username;
     getUser(username, (data) => {
@@ -34,14 +29,44 @@ router.get('/user/:username/matchlist', function(req, res, next) {
     });
 });
 
-function getMatchListByUsername(username, callback) {
-    getUser(username, (data) => {
-        const accountId = data.accountId;
-        if (!accountId) { console.error("No accountId found"); callback(null); }
+router.get('/user/:username/matchhistory', function(req, res, next) {
+    const username = req.params.username;
+    getMatchListByUsername(username, (matchList) => {
+        const fullMatches = matchList.matches;
+        let matchHistory = [];
 
-        getMatchList(data.accountId, (matchList) => {
-            callback(matchList);
-        });
+        // For now, just looking at first five matches in detail
+        // To implement pagination, we'd need to make use of the startIndex, endIndex, and totalGames
+        for (let i = 0; i < fullMatches.length && i < 5; i++) {
+            const match = fullMatches[i];
+
+            getGameById(match.gameId, (gameData) => {
+                console.log(i);
+                matchHistory.push(gameData);
+
+                // last iteration
+                if ( i >= fullMatches.length - 1 || i >= 4) {
+                    res.send(matchHistory);
+                    break;
+                }
+            });
+        }
+    });
+});
+
+/***************************************
+ *  RIOT API METHODS
+ **************************************/
+
+function getGameById(gameId, callback) {
+    leagueJs.Match
+    .gettingById(gameId)
+    .then(data => {
+        callback(data);
+    })
+    .catch(err => {
+        console.error(err);
+        callback(err);
     });
 }
 
@@ -67,6 +92,21 @@ function getUser(username, callback){
             console.error(err);
             callback(err);
         });
+}
+
+/***************************************
+ *  HELPER FUNCTIONS / BUSINESS LOGIC
+ **************************************/
+
+function getMatchListByUsername(username, callback) {
+    getUser(username, (data) => {
+        const accountId = data.accountId;
+        if (!accountId) { console.error("No accountId found"); callback(null); }
+
+        getMatchList(data.accountId, (matchList) => {
+            callback(matchList);
+        });
+    });
 }
 
 module.exports = router;
