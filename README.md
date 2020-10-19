@@ -29,7 +29,8 @@ From there, the **front-end** setup is very simple, we have a CDN (i.e. Cloudfro
 
 The **back-end** can be deployed on EC2s, with a load balancer in front to ensure resiliency. In front of that, we should put an API Gateway, and if desired we could wrap it all up in a WAF.
 
-**DIAGRAM TO COME**
+Here is a basic diagram I threw together in Lucid Chart:
+![Architecture Diagram](https://raw.githubusercontent.com/derek-etherton/LeagueStats/main/leagueStats.png)
 
 # Next Steps, or "if I had two more hours"
 Though not a provided question, I did want to outline next steps for this application to be useable:
