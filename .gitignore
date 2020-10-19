@@ -38,6 +38,7 @@ bower_components
 build/Release
 
 # Dependency directories
+public/node_modules/
 node_modules/
 jspm_packages/
 
@@ -81,6 +82,9 @@ typings/
 # Nuxt.js build / generate output
 .nuxt
 dist
+
+# React build output
+public/build
 
 # Gatsby files
 .cache/
