@@ -29,6 +29,9 @@ router.get('/user/:username/matchlist', function(req, res, next) {
     });
 });
 
+/**
+ * Given a LoL username, returns a list with the user's five most recent matches' data
+ */
 router.get('/user/:username/matchhistory', function(req, res, next) {
     const username = req.params.username;
     getMatchListByUsername(username, (matchList) => {
@@ -47,7 +50,6 @@ router.get('/user/:username/matchhistory', function(req, res, next) {
                 // last iteration
                 if ( i >= fullMatches.length - 1 || i >= 4) {
                     res.send(matchHistory);
-                    break;
                 }
             });
         }
@@ -57,6 +59,8 @@ router.get('/user/:username/matchhistory', function(req, res, next) {
 /***************************************
  *  RIOT API METHODS
  **************************************/
+
+// TODO: Modify to use promises if time permits to simplify 'matchhistory' method
 
 function getGameById(gameId, callback) {
     leagueJs.Match
