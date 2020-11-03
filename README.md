@@ -1,9 +1,6 @@
 # LeagueStats
 Sample League of Legends stats app for Battlefy. While this app was bootstrapped with create-react-app, it does not use a ServiceWorker.
 
-# Deployed Version
-http://league-stats-etherton.herokuapp.com/
-
 # Lessons Learned
 - Error-handling should be built-in from the start
 - It's painfully easy to deploy to Heroku, and it's also straightforward to grab a completed front-end and have a node server serve it up
