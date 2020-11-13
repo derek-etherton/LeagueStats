@@ -6,45 +6,52 @@ class MatchList extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { username: "", matchHistory: "" };
+        this.state = { username: '', matchHistory: '' };
 
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleSubmit(event) {
+    async handleSubmit(event) {
+        event.preventDefault();
+
         this.state.username = document.getElementById('userInput').value;
 
-        this.getMatchHistory(this.state.username, (response) => {
-            const accountId = response.accountId;
-            const matches = response.matches;
+        const response = await this.getMatchHistory(this.state.username)
+            .catch(error => { console.error(error.name) });
 
-            let matchDataList = [];
+        const accountId = response.accountId;
+        const matches = response.matches;
 
-            matches.forEach(match => {
-                let matchData = {};
+        let matchDataList = [];
 
-                const participantData = this.findParticipantData(accountId, match.participantIdentities);
-                const id = participantData.participantId;
-            
-                matchData.participantId = id;
-                matchData.summonerName = participantData.player.summonerName;
-                matchData.gameDuration = match.gameDuration;
+        matches.forEach(match => {
+            let matchData = {};
 
-                matchData.stats = match.participants[id - 1];
+            const participantData = this.findParticipantData(accountId, match.participantIdentities);
+            const id = participantData.participantId;
 
-                matchDataList.push(matchData);
-            });
+            matchData.participantId = id;
+            matchData.summonerName = participantData.player.summonerName;
+            matchData.gameDuration = match.gameDuration;
 
-            // this.processUserStats(participantData, matches);
-            this.setState({ matchHistory: matchDataList });
+            matchData.stats = match.participants[id - 1];
+
+            matchDataList.push(matchData);
         });
-        event.preventDefault();
+
+        this.setState({ matchHistory: matchDataList });
     }
 
-    getMatchHistory(username, callback) {
-        fetch("/api/user/" + username + "/matchhistory")
-            .then(res => res.json())
-            .then(res => callback(res));
+    async getMatchHistory(username) {
+        const response = await fetch(`http://localhost:9000/api/user/${username}/matchhistory`);
+
+        if (!response.ok) {
+            const message = `Error: ${response.status}`
+            throw new Error(message);
+        }
+
+        const json = await response.json();
+        return json;
     }
 
     render() {
@@ -53,9 +60,9 @@ class MatchList extends React.Component {
                 <form onSubmit={this.handleSubmit}>
                     <label>
                         Summoner Name:
-                        <input id="userInput" type="text" name="username"/>
+                        <input id="userInput" type="text" name="username" />
                     </label>
-                    <input type="submit" value="Submit"/>
+                    <input type="submit" value="Submit" />
                 </form>
                 { this.state.matchHistory &&
                     <div>
@@ -72,7 +79,7 @@ class MatchList extends React.Component {
         let i;
         for (i = 0; i < participantIds.length; i++) {
             const participant = participantIds[i];
-            if (participant.player.accountId.normalize() == accountId.normalize()){
+            if (participant.player.accountId.normalize() == accountId.normalize()) {
                 return participant;
             }
         }
@@ -81,7 +88,5 @@ class MatchList extends React.Component {
         return null;
     }
 }
-
-
 
 export default MatchList;
