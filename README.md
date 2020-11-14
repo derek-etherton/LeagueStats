@@ -1,15 +1,3 @@
-# LeagueStats
-Sample League of Legends stats app for Battlefy. While this app was bootstrapped with create-react-app, it does not use a ServiceWorker.
-
-# Lessons Learned
-- Error-handling should be built-in from the start
-- It's painfully easy to deploy to Heroku, and it's also straightforward to grab a completed front-end and have a node server serve it up
-- 4 hours is not a lot of time to build a full-stack application, and my development processes on my home computer have a lot of room for improvement (IDE Plugins, linting, autocomplete)
-- There is significant value to having a back-end that acts as middleware to another API beyond just obscuring your secrets
-- Even for a 4-hour coding challenge, it is worth putting together some prototypes for your main object types to assist with autocomplete and save time looking at docs and large json objects
-
-# How I would approach this differently next time
-I think my basic approach to develop the backend first, then build the frontend on top was quite effective both in terms of avoiding context switching, and isolating issues as they came up. Since I knew the backend was returning the data I needed, I knew that errors on the frontend were largely isolated to that part of the code. On the backend, I created a number of methods to break down the task of getting a users' full game details which I also found to be effective. I did waste a small bit of time creating some api endpoints I knew I wouldn't use because I had that functionality written up anyways, but were I to do it again I would've left those endpoints out, since the time crunch definitely caught up to me. On the front-end, my plan to have two main components (one MatchList containing several MatchCards) still seems good to me, but the methods I used to process the provided match data were not very effective. Next time, I would definitely create an over-arching data processor method or class, which would fetch from the API and work through this match data logic independently before sending it through to the views. The last thing I would do differently is lay out data prototypes or at least some sample data JSONs in a very clear way before beginning work, because the amount of time I spent re-referencing bulky JSON objects was far too high. 
 
 # How would I handle exceeding the rate limiting threshold on Riot Games' API?
 Compliments of LeagueJS, [RiotRateLimiter](https://github.com/Colorfulstan/RiotRateLimiter-node) is already being used to gracefully avoid rate limits using a SPREAD strategy. Some other ways to prevent hitting the limit in the first place, are:
