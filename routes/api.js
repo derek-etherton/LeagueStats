@@ -47,11 +47,11 @@ router.get('/user/:username/matchhistory', async function (req, res, next) {
 
     let matchHistory = [];
 
+
     // For now, just looking at first five matches in detail
     // To implement pagination, we'd need to make use of the startIndex, endIndex, and totalGames
     for (let i = 0; i < fullMatches.length && i < 5; i++) {
         const match = fullMatches[i];
-
 
         const gameData = await leagueJs.Match
             .gettingById(match.gameId);
@@ -59,7 +59,10 @@ router.get('/user/:username/matchhistory', async function (req, res, next) {
 
         // last iteration
         if (i >= fullMatches.length - 1 || i >= 4) {
-            res.send({ "accountId": accountId, "matches": matchHistory });
+            const dataMapping = { "accountId": accountId, "matches": matchHistory };
+
+            const cleanHistory = parseMatchData(dataMapping);
+            res.send(cleanHistory);
         }
     }
 });
@@ -67,6 +70,62 @@ router.get('/user/:username/matchhistory', async function (req, res, next) {
 /***************************************
  *  HELPER FUNCTIONS / BUSINESS LOGIC
  **************************************/
+
+function findParticipantData(accountId, participantIds) {
+    let i;
+    for (i = 0; i < participantIds.length; i++) {
+        const participant = participantIds[i];
+        if (participant.player.accountId.normalize() == accountId.normalize()) {
+            return participant;
+        }
+    }
+
+    console.error("Account ID not found as match participant");
+    return null;
+}
+
+function getSummonerData(fullStats) {
+    let summonerData = {};
+    summonerData.stats = {};
+
+    summonerData.championId = fullStats.championId;
+    summonerData.spell1Id = fullStats.spell1Id;
+    summonerData.spell2Id = fullStats.spell2Id;
+
+    summonerData.stats.win = fullStats.stats.win;
+    summonerData.stats.champLevel = fullStats.stats.champLevel;
+    summonerData.stats.totalMinionsKilled = fullStats.stats.totalMinionsKilled;
+    summonerData.stats.kills = fullStats.stats.kills;
+    summonerData.stats.deaths = fullStats.stats.deaths;
+    summonerData.stats.assists = fullStats.stats.assists;
+
+    return summonerData;
+}
+
+function parseMatchData(data) {
+    const accountId = data.accountId;
+    const matches = data.matches;
+
+    let matchDataList = [];
+
+    matches.forEach(match => {
+        let matchData = {};
+
+        const participantData = findParticipantData(accountId, match.participantIdentities);
+
+        const id = participantData.participantId;
+
+        matchData.participantId = id;
+        matchData.summonerName = participantData.player.summonerName;
+        matchData.gameDuration = match.gameDuration;
+
+        matchData.summoner = getSummonerData(match.participants[id - 1]);
+
+        matchDataList.push(matchData);
+    });
+
+    return matchDataList;
+}
 
 async function getMatchListByUsername(username) {
 

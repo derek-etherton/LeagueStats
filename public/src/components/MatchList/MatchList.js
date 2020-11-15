@@ -19,27 +19,7 @@ class MatchList extends React.Component {
         const response = await this.getMatchHistory(this.state.username)
             .catch(error => { console.error(error.name) });
 
-        const accountId = response.accountId;
-        const matches = response.matches;
-
-        let matchDataList = [];
-
-        matches.forEach(match => {
-            let matchData = {};
-
-            const participantData = this.findParticipantData(accountId, match.participantIdentities);
-            const id = participantData.participantId;
-
-            matchData.participantId = id;
-            matchData.summonerName = participantData.player.summonerName;
-            matchData.gameDuration = match.gameDuration;
-
-            matchData.stats = match.participants[id - 1];
-
-            matchDataList.push(matchData);
-        });
-
-        this.setState({ matchHistory: matchDataList });
+        this.setState({ matchHistory: response });
     }
 
     async getMatchHistory(username) {
@@ -73,19 +53,6 @@ class MatchList extends React.Component {
                 }
             </div>
         );
-    }
-
-    findParticipantData(accountId, participantIds) {
-        let i;
-        for (i = 0; i < participantIds.length; i++) {
-            const participant = participantIds[i];
-            if (participant.player.accountId.normalize() == accountId.normalize()) {
-                return participant;
-            }
-        }
-
-        console.error("Account ID not found as match participant");
-        return null;
     }
 }
 
