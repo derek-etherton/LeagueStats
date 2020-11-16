@@ -6,7 +6,7 @@ class MatchList extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { username: '', matchHistory: '' };
+        this.state = { username: '', matchHistory: '', isLoading: false };
 
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -16,10 +16,12 @@ class MatchList extends React.Component {
 
         this.state.username = document.getElementById('userInput').value;
 
+        this.setState({ isLoading: true });
+
         const response = await this.getMatchHistory(this.state.username)
             .catch(error => { console.error(error.name) });
 
-        this.setState({ matchHistory: response });
+        this.setState({ matchHistory: response, isLoading: false });
     }
 
     async getMatchHistory(username) {
@@ -44,6 +46,11 @@ class MatchList extends React.Component {
                     </label>
                     <input type="submit" value="Submit" />
                 </form>
+                { this.state.isLoading &&
+                    <div>
+                        Loading...
+                    </div>
+                }
                 { this.state.matchHistory &&
                     <div>
                         {this.state.matchHistory.map((value, index) => {

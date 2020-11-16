@@ -6,11 +6,6 @@ function MatchCard(props) {
     const data = props.data;
     const playerStats = data.summoner.stats;
 
-    if (!data || data.length === 0) {
-        return <p>Loading...</p>;
-    }
-
-
     const gameDuration = Math.floor(data.gameDuration / 60);
 
     return (
