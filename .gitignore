@@ -84,7 +84,9 @@ typings/
 dist
 
 # React build output
-public/build
+public/build/
+# tsc build output
+build/
 
 # Gatsby files
 .cache/
